@@ -9,6 +9,7 @@ window.onload = () => {
   btnConnect.onclick = () => connect(IP, PORT)
   const btnPing = document.getElementById('btnPing')
   btnPing.onclick = (data) => ping(data)
+  loadImages()
 }
 
 // Connect to the ws server
