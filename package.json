@@ -1,0 +1,26 @@
+{
+  "name": "get-the-hack-out",
+  "version": "0.0.1",
+  "description": "Work together to hack your way out",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huncfut/get-the-hack-out.git"
+  },
+  "author": "Kuba Zeligowski",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/huncfut/get-the-hack-out/issues"
+  },
+  "homepage": "https://github.com/huncfut/get-the-hack-out#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "ws": "^8.2.3"
+  },
+  "type": "module"
+}

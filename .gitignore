@@ -1,0 +1,8 @@
+node_modules
+bundle.js
+npm-debug.log
+.DS_Store
+build.sh
+deploy.sh
+.atomignore
+!src/.env
