@@ -23,7 +23,7 @@ const connect = (ip, port) => {
           console.log(data)
           break;
         default:
-          console.log("unknown opcode")
+          console.log(data)
       }
     }
   }

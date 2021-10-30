@@ -1,34 +1,49 @@
 /*
 game = {
   hacker: {
-    ws: WS
+    uuid: UUID
   },
   player: {
-    ws: WS,
+    uuid: UUID,
     x: Number,
     y: Number,
     speed: Number // blocks / s
   },
-  levels: [{
-    grid: {
-      height: Number,
-      width: Number
-    },
-    nodes: [{
-      x: Number,
-      y: Number,
-      connections: { // Indexes of other nodes
-        N: Number,
-        E: Number,
-        S: Number,
-        W: Number
-      }
-    }],
-    guards: [{
-      x: Number,
-      y: Number,
-      speed: Number // blocks / s
-    }]
-  }]
+  grid: {
+    width: Number,
+    height: Number
+  },
+  levels: []<Level>
 }
 */
+import { makeLevel } from './levels.js'
+
+const newGame = (uuid) => {
+  const grid = {
+    width: 3 * 4 + 1,
+    height: 3 * 4 + 1
+  }
+
+  const levels = [makeLevel(grid)]
+
+  const player = {
+    uuid: uuid,
+    x: 0,
+    y: 1,
+    level: 0
+  }
+
+  return { player, grid, levels }
+}
+
+const startGame = (player) => {
+  
+}
+
+const gameTick = (game) => {
+
+}
+
+export {
+  newGame
+}
