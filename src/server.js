@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws';
 import dotenv from 'dotenv'
 
 // Get .env in as process.env
-dotenv.config()
+require('dotenv').config()
 
 // Setup http static server
 const httpServer = express()
@@ -12,7 +12,6 @@ httpServer.listen(process.env.HTTP_PORT, () => console.log(`HTTP Server started 
 
 // WebSocket server
 const wss = new WebSocketServer({ port: process.env.WS_PORT })
-
 wss.on('connection', ws => {
   ws.on('close', console.log)
   ws.on('error', console.log)
