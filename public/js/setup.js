@@ -1,13 +1,19 @@
-window.onload = () => {
-  const btnConnect = document.getElementById('btnConnect')
-  btnConnect.onclick = connect
+var ctx
 
+window.onload = () => {
+  // Setup canvas
+  const gameCanvas = document.getElementById('gameCanvas')
+  ctx = gameCanvas.getContext('2d')
+  // Setup buttons
+  const btnConnect = document.getElementById('btnConnect')
+  btnConnect.onclick = () => connect(IP, PORT)
   const btnPing = document.getElementById('btnPing')
   btnPing.onclick = (data) => ping(data)
 }
 
+// Connect to the ws server
 const connect = (ip, port) => {
-  ws = new WebSocket(`ws://${IP}:${PORT}`)
+  ws = new WebSocket(`ws://${ip}:${port}`)
   ws.onopen = () => {
     // On connection
     ws.send(JSON.stringify({
@@ -22,6 +28,8 @@ const connect = (ip, port) => {
         case "ping":
           console.log(data)
           break;
+        case "game":
+          drawGame(data.game)
         default:
           console.log(data)
       }

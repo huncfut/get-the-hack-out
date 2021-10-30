@@ -1,0 +1,16 @@
+.gameCanvas {
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+  height: 700px;
+  display: block;
+  background-color: black;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+html, body {
+  margin: 20;
+}

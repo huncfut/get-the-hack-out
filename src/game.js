@@ -29,7 +29,7 @@ const newGame = (uuid) => {
   const player = {
     uuid: uuid,
     x: 0,
-    y: 1,
+    y: 2,
     level: 0
   }
 
@@ -37,7 +37,7 @@ const newGame = (uuid) => {
 }
 
 const startGame = (player) => {
-  
+
 }
 
 const gameTick = (game) => {

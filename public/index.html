@@ -3,12 +3,15 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/setup.js" charset="utf-8"></script>
     <script src="./js/env.js" charset="utf-8"></script>
+    <script src="./js/canvas.js" charset="utf-8"></script>
+    <script src="./js/setup.js" charset="utf-8"></script>
     <title>Get the hack out</title>
   </head>
   <body>
-    <h1>Hello world</h1>
+    <div class="canvasContainer" id="canvasContainer">
+      <canvas id="gameCanvas" class="gameCanvas"></canvas>
+    </div>
     <button type="button" id="btnConnect">Connect</button>
     <button type="button" id="btnPing">Ping</button>
   </body>
