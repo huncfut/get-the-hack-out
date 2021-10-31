@@ -76,9 +76,9 @@ const gameTick = ({ uuid, hacker, player, grid, levels }, playerMovement) => ({
 const getStartingBlock = layout => layout.flat().filter(block => block.type === 'e')[0]
 
 const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
-  const floor = levels[0].layout.flat().filter(block => block.type !== '.')
+  const level = levels[0].layout.flat().filter(block => block.type !== '.')
 
-  send(sendId, { grid, floor })
+  send(sendId, { opcode: 'game_state', grid, level })
 }
 
 export {

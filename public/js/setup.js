@@ -16,12 +16,6 @@ window.onload = () => {
 const connect = (ip, port) => {
   ws = new WebSocket(`ws://${ip}:${port}`)
   ws.onopen = () => {
-    // On connection
-    ws.send(JSON.stringify({
-      opcode: "connected",
-      hello: "world"
-    }))
-
     // Recieve
     ws.onmessage = message => {
       const data = JSON.parse(message.data)
@@ -29,9 +23,9 @@ const connect = (ip, port) => {
         case "ping":
           console.log(data)
           break;
-        case "game":
+        case "game_state":
           console.log(data)
-          drawGame(data.game)
+          drawGame(data)
         default:
           console.log(data)
       }

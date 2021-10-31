@@ -10,7 +10,7 @@ Level = {
 */
 
 const makeLevel = (grid, depth) => ({
-  layout: generateLevel().map((row, x) => row.map((type, y) => ({ type, x, y, taken: '' }))),
+  layout: generateLevel().map((row, y) => row.map((type, x) => ({ type, x, y, state: 'free' }))),
   enemies: []
 })
 
