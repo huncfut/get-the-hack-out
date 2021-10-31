@@ -1,4 +1,4 @@
-var ctx
+var ctx, ws
 
 window.onload = () => {
   loadImages()
@@ -14,7 +14,9 @@ window.onload = () => {
 
 // Connect to the ws server
 const connect = (ip, port) => {
+  if(ws) return
   ws = new WebSocket(`ws://${ip}:${port}`)
+  
   ws.onopen = () => {
     // Recieve
     ws.onmessage = message => {
@@ -22,10 +24,11 @@ const connect = (ip, port) => {
       switch(data.opcode) {
         case "ping":
           console.log(data)
-          break;
+          break
         case "game_state":
           console.log(data)
           drawGame(data)
+          break
         default:
           console.log(data)
       }

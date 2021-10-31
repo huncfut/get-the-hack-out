@@ -1,4 +1,4 @@
-const drawGame = (game) => {
+const drawGame = game => {
   const height = game.grid.height * BLOCK_SIZE
   const width = game.grid.width * BLOCK_SIZE
   ctx.canvas.height = height

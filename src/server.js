@@ -18,8 +18,8 @@ httpServer.listen(process.env.HTTP_PORT, () => console.log(`HTTP Server started 
 // WebSocket server
 const wss = new WebSocketServer({ port: process.env.WS_PORT })
 wss.on('connection', ws => {
-  ws.on('close', console.log)
-  ws.on('error', console.log)
+  ws.on('close', e => console.log("Closed"))
+  ws.on('error', e => console.log("Error"))
 
   // Add new connection
   const uuid = uuidv4()
@@ -45,6 +45,5 @@ const handleMessage = (uuid, data) => {
     //   lobby.playerId ?? (lobby.playerId = uuid) || lobby.hackerId ?? lobby.hackerId = uuid
     //   break;
     case "gameState":
-      console.log()
   }
 }
