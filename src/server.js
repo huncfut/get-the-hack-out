@@ -10,6 +10,7 @@ dotenv.config()
 
 var games = {}
 var playerDirections = {}
+var lobby = {}
 
 // Setup http static server
 const httpServer = express()
@@ -41,21 +42,30 @@ wss.on('connection', ws => {
   }, 1000 / process.env.TICK)
 })
 
-var lobby = {}
+
 
 const handleMessage = (uuid, data) => {
   switch(data.opcode) {
     case "setup":
       break;
-    // case "join":
-    //   lobby.playerId ?? (lobby.playerId = uuid) || lobby.hackerId ?? lobby.hackerId = uuid
-    //   break;
+    case "join":
+      if(!lobby.playerId) lobby.playerId = uuid
+      else if(!lobby.hackerId) {
+        lobby.hackerId = uuid
+        const newGame = getNewGame(lobby.playerId, lobby.hackerId)
+        games[newGame.uuid] = newGame
+      }
+      lobby.playerId ?? (lobby.playerId = uuid) || lobby.hackerId ?? lobby.hackerId = uuid
+      break;
     case "keyboard_update":
-      handleKeyboardUpdate(uuid, data)
+      if()
+      handlePlayerKeyboardUpdate(uuid, data)
   }
 }
 
-const handleKeyboardUpdate = (uuid, data) => {
+const handle
+
+const handlePlayerKeyboardUpdate = (uuid, data) => {
   const direction = (data.key.code === 'w' || data.key.code === 'ArrowUp') && 'N'
     || (data.key.code === 's' || data.key.code === 'ArrowDown') && 'S'
     || (data.key.code === 'a' || data.key.code === 'ArrowLeft') && 'W'

@@ -72,7 +72,7 @@ const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
   const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
     .map(({ type, x, y }) => ({
       type, x, y,
-      state: (x === player.x && y === player.y) && 'player'
+      occupied: (x === player.x && y === player.y) && 'player'
         || 'free'
     }))
 

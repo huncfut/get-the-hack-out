@@ -9,5 +9,5 @@ const drawGame = game => {
   ctx.fillRect(0, 0, width, height)
 
   // Draw Board
-  game.level.map(block => ctx.drawImage(imgs[block.type][block.state], block.x * BLOCK_SIZE, block.y * BLOCK_SIZE))
+  game.level.map(block => ctx.drawImage(imgs[block.type][block.occupied], block.x * BLOCK_SIZE, block.y * BLOCK_SIZE))
 }
