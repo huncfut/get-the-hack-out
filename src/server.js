@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid'
-import { getNewGame, sendPlayerGameState, sendHackerGameState, gameTick, hackerActivate } from './game.js'
+import { getNewGame, sendPlayerGameState, sendHackerGameState, gameTick } from './game.js'
 import { newConnection, send } from './wsUtils.js'
 
 // Get .env in as process.env
@@ -68,7 +68,7 @@ const handleMessage = (uuid, data) => {
         handlePlayerKeyboardUpdate(uuid, data)
         break
       } else if(uuid in hackers) {
-        games[hackers[uuid]] = hackerActivate(games[hackers[uuid]])
+        // games[hackers[uuid]] = hackerActivate(games[hackers[uuid]])
       }
   }
 }
@@ -86,8 +86,8 @@ const handlePlayerKeyboardUpdate = (uuid, data) => {
   index >= 0 && playerDirections[uuid].splice(index, 1)
 }
 
-const handleHackerKeyboardUpdate = (uuid, data) => {
-  if(data.key.code === 'q') {
-
-  }
-}
+// const handleHackerKeyboardUpdate = (uuid, data) => {
+//   if(data.key.code === 'q') {
+//
+//   }
+// }

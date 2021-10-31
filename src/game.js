@@ -46,8 +46,8 @@ const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
 
   var levelChange = 0
   if(playerMovement.x === 0 && playerMovement.y === 0) {
-    if(levels[player.level].layout[player.y][player.x].type === 'U') levelChange = -1
-    else if(levels[player.level].layout[player.y][player.x].type === 'D') levelChange = 1
+    if(levels[player.level].layout[player.y][player.x].type === 'u') levelChange = -1
+    else if(levels[player.level].layout[player.y][player.x].type === 'd') levelChange = 1
   }
 
   return {
@@ -111,20 +111,9 @@ const getPlayerMovement = (directions, player, grid, layout) => {
   return { x: 0, y: 0 }
 }
 
-// const hackerActivate = game => {
-//   const activGame = gameTick([], game, true)
-//   sendHackerGameState(activGame.hacker.uuid, activGame)
-//   sendPlayerGameState(activGame.player.uuid, activGame)
-// }
-//
-// const activateLevels = { player, levels } => {
-//   const activatedLevels = levels[player.level].layout
-// }
-
 export {
   getNewGame,
   gameTick,
   sendHackerGameState,
-  sendPlayerGameState,
-  hackerActivate
+  sendPlayerGameState
 }
