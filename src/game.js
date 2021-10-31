@@ -46,8 +46,8 @@ const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
 
   var levelChange = 0
   if(playerMovement.x === 0 && playerMovement.y === 0) {
-    if(levels[player.level].layout[player.y][player.x].type === 'u') levelChange = -1
-    else if(levels[player.level].layout[player.y][player.x].type === 'd') levelChange = 1
+    if(levels[player.level].layout[player.y][player.x].type === 'U') levelChange = -1
+    else if(levels[player.level].layout[player.y][player.x].type === 'D') levelChange = 1
   }
 
   return {
@@ -68,7 +68,7 @@ const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
 
 const getStartingBlock = layout => layout.flat().filter(block => block.type === 'e')[0]
 
-const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
+const sendHackerGameState = (sendId, { uuid, hacker, player, grid, levels }, status = '') => {
   const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
     .map(({ type, x, y }) => ({
       type, x, y,
@@ -77,6 +77,18 @@ const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
     }))
 
   send(sendId, { opcode: 'game_state', grid, level })
+}
+
+const sendPlayerGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
+  const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
+    .map(({ type, x, y }) => ({
+      type, x: x - player.x + 3, y: y - player.y + 3,
+      occupied: (x === player.x && y === player.y) && 'player'
+        || 'free'
+    })).filter(({ x, y }) => (
+      (x <= 6 && x >= 0) && (y <= 6 && y >= 0)
+   ))
+   send(sendId, { opcode: 'game_state', grid: { width: 7, height: 7 }, level })
 }
 
 const getPlayerMovement = (directions, player, grid, layout) => {
@@ -99,8 +111,20 @@ const getPlayerMovement = (directions, player, grid, layout) => {
   return { x: 0, y: 0 }
 }
 
+// const hackerActivate = game => {
+//   const activGame = gameTick([], game, true)
+//   sendHackerGameState(activGame.hacker.uuid, activGame)
+//   sendPlayerGameState(activGame.player.uuid, activGame)
+// }
+//
+// const activateLevels = { player, levels } => {
+//   const activatedLevels = levels[player.level].layout
+// }
+
 export {
   getNewGame,
   gameTick,
-  sendGameState
+  sendHackerGameState,
+  sendPlayerGameState,
+  hackerActivate
 }

@@ -1,4 +1,4 @@
-var ctx, ws
+var ctx, ws, playerType
 
 window.onload = () => {
   loadImages()
@@ -25,18 +25,20 @@ const connect = (ip, port) => {
     ws.onmessage = message => {
       const data = JSON.parse(message.data)
       switch(data.opcode) {
-        case "ping":
-          console.log(data)
-          break
-        case "game_state":
-          console.log(data)
+        case 'player_type':
+          playerType = data.type
+        case 'game_state':
           drawGame(data)
-          break
+          // if(playerType === 'player') playersVinette(data.grid)
         default:
           console.log(data)
       }
     }
+
+    send({ opcode: 'join' })
   }
+
+
 }
 
 const send = data => ws.send(JSON.stringify(data))

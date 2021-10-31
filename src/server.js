@@ -2,13 +2,15 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid'
-import { getNewGame, sendGameState, gameTick } from './game.js'
+import { getNewGame, sendPlayerGameState, sendHackerGameState, gameTick, hackerActivate } from './game.js'
 import { newConnection, send } from './wsUtils.js'
 
 // Get .env in as process.env
 dotenv.config()
 
 var games = {}
+var players = {}
+var hackers = {}
 var playerDirections = {}
 var lobby = {}
 
@@ -28,21 +30,10 @@ wss.on('connection', ws => {
   newConnection(uuid, ws)
 
   ws.on('message', message => {
-    const data = JSON.parse(JSON.parse(message.toString()))
+    const data = JSON.parse(message.toString())
     handleMessage(uuid, data)
   })
-
-  const newGame = getNewGame(uuidv4(), 0)
-  games[newGame.uuid] = newGame
-  playerDirections[uuid] = []
-  sendGameState(uuid, games[newGame.uuid])
-  setInterval(() => {
-    games[newGame.uuid] = gameTick(playerDirections[uuid], games[newGame.uuid])
-    sendGameState(uuid, games[newGame.uuid])
-  }, 1000 / process.env.TICK)
 })
-
-
 
 const handleMessage = (uuid, data) => {
   switch(data.opcode) {
@@ -52,20 +43,38 @@ const handleMessage = (uuid, data) => {
       if(!lobby.playerId) lobby.playerId = uuid
       else if(!lobby.hackerId) {
         lobby.hackerId = uuid
+        // Start new game
         const newGame = getNewGame(lobby.playerId, lobby.hackerId)
+        lobby = {}
+        players[newGame.player.uuid] = newGame.uuid
+        hackers[newGame.hacker.uuid] = newGame.uuid
+        send(newGame.player.uuid, { opcode: 'player_type', type: 'player' })
+        send(newGame.hacker.uuid, { opcode: 'player_type', type: 'hacker' })
         games[newGame.uuid] = newGame
+        playerDirections[newGame.player.uuid] = []
+        sendPlayerGameState(newGame.player.uuid, newGame)
+        sendHackerGameState(newGame.hacker.uuid, newGame)
+        setInterval(() => {
+          const game = gameTick(playerDirections[newGame.player.uuid], games[newGame.uuid])
+          games[newGame.uuid] = game
+          sendPlayerGameState(newGame.player.uuid, game)
+          sendHackerGameState(newGame.hacker.uuid, game)
+        }, 1000 / process.env.TICK)
+
       }
-      lobby.playerId ?? (lobby.playerId = uuid) || lobby.hackerId ?? lobby.hackerId = uuid
       break;
     case "keyboard_update":
-      if()
-      handlePlayerKeyboardUpdate(uuid, data)
+      if(uuid in players) {
+        handlePlayerKeyboardUpdate(uuid, data)
+        break
+      } else if(uuid in hackers) {
+        games[hackers[uuid]] = hackerActivate(games[hackers[uuid]])
+      }
   }
 }
 
-const handle
-
 const handlePlayerKeyboardUpdate = (uuid, data) => {
+  if(data.key.code === 'q') return
   const direction = (data.key.code === 'w' || data.key.code === 'ArrowUp') && 'N'
     || (data.key.code === 's' || data.key.code === 'ArrowDown') && 'S'
     || (data.key.code === 'a' || data.key.code === 'ArrowLeft') && 'W'
@@ -75,4 +84,10 @@ const handlePlayerKeyboardUpdate = (uuid, data) => {
 
   const index = playerDirections[uuid].findIndex(e => e === direction)
   index >= 0 && playerDirections[uuid].splice(index, 1)
+}
+
+const handleHackerKeyboardUpdate = (uuid, data) => {
+  if(data.key.code === 'q') {
+
+  }
 }
