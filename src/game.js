@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { makeLevel } from './levels.js'
+import { generateLevels } from './levels.js'
 import { send } from './wsUtils.js'
 
 
@@ -17,9 +17,8 @@ const getNewBoard = () => {
     width: 3 * 4 + 1,
     height: 3 * 4 + 1
   }
-
   // Get levels
-  const levels = [makeLevel(grid)]
+  const levels = generateLevels()
 
   return { grid, levels }
 }
@@ -31,6 +30,7 @@ const getNewGame = (playerId, hackerId) => {
   const { x, y } = getStartingBlock(levels[0].layout)
   const player = {
     uuid: playerId,
+    level: 0,
     x, y
   }
   // Get hacker
@@ -41,24 +41,35 @@ const getNewGame = (playerId, hackerId) => {
   return { uuid, hacker, player, grid, levels }
 }
 
-const gameTick = ({ uuid, hacker, player, grid, levels }, playerMovement) => ({
-  uuid,
-  hacker,
-  // Move player
-  player: {
-    uuid: player.uuid,
-    x: player.x + playerMovement.x,
-    y: player.y + playerMovement.y
-  },
-  grid,
-  // Move enemies
-  levels
-})
+const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
+  const playerMovement = getPlayerMovement(directions, player, grid, levels[player.level].layout)
+
+  var levelChange = 0
+  if(playerMovement.x === 0 && playerMovement.y === 0) {
+    if(levels[player.level].layout[player.y][player.x].type === 'u') levelChange = -1
+    else if(levels[player.level].layout[player.y][player.x].type === 'd') levelChange = 1
+  }
+
+  return {
+    uuid,
+    hacker,
+    // Move player
+    player: {
+      uuid: player.uuid,
+      level: player.level + levelChange,
+      x: player.x + playerMovement.x,
+      y: player.y + playerMovement.y
+    },
+    grid,
+    // Move enemies
+    levels
+  }
+}
 
 const getStartingBlock = layout => layout.flat().filter(block => block.type === 'e')[0]
 
 const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
-  const level = levels[0].layout.flat().filter(block => block.type !== '.')
+  const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
     .map(({ type, x, y }) => ({
       type, x, y,
       state: (x === player.x && y === player.y) && 'player'
@@ -66,6 +77,26 @@ const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
     }))
 
   send(sendId, { opcode: 'game_state', grid, level })
+}
+
+const getPlayerMovement = (directions, player, grid, layout) => {
+  for(var i = directions.length - 1; i >= 0; i--) {
+    switch(directions[i]) {
+      case 'S':
+        if(player.y + 1 >= grid.height) break
+        if(layout[player.y + 1][player.x].type !== '.') return { x: 0, y: 1 }
+      case 'N':
+        if(player.y - 1 < 0) break
+        if(layout[player.y - 1][player.x].type !== '.') return { x: 0, y: -1 }
+      case 'W':
+        if(player.x - 1 < 0) break
+        if(layout[player.y][player.x - 1].type !== '.') return { x: -1, y: 0 }
+      case 'E':
+        if(player.x + 1 >= grid.width) break
+        if(layout[player.y][player.x + 1].type !== '.') return { x: 1, y: 0 }
+    }
+  }
+  return { x: 0, y: 0 }
 }
 
 export {

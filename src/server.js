@@ -2,14 +2,14 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid'
-import { getNewGame, sendGameState } from './game.js'
+import { getNewGame, sendGameState, gameTick } from './game.js'
 import { newConnection, send } from './wsUtils.js'
 
 // Get .env in as process.env
 dotenv.config()
 
 var games = {}
-var playerKeyboards = {}
+var playerDirections = {}
 
 // Setup http static server
 const httpServer = express()
@@ -31,10 +31,14 @@ wss.on('connection', ws => {
     handleMessage(uuid, data)
   })
 
-  const game = getNewGame(uuid, 0)
-  games[game.uuid] = game
-  sendGameState(uuid, games[game.uuid])
-  setInterval(() => sendGameState(uuid, games[game.uuid]), 1000 / process.env.TICK)
+  const newGame = getNewGame(uuidv4(), 0)
+  games[newGame.uuid] = newGame
+  playerDirections[uuid] = []
+  sendGameState(uuid, games[newGame.uuid])
+  setInterval(() => {
+    games[newGame.uuid] = gameTick(playerDirections[uuid], games[newGame.uuid])
+    sendGameState(uuid, games[newGame.uuid])
+  }, 1000 / process.env.TICK)
 })
 
 var lobby = {}
@@ -47,9 +51,7 @@ const handleMessage = (uuid, data) => {
     //   lobby.playerId ?? (lobby.playerId = uuid) || lobby.hackerId ?? lobby.hackerId = uuid
     //   break;
     case "keyboard_update":
-      playerKeyboards[uuid] = playerKeyboards[uuid] || []
       handleKeyboardUpdate(uuid, data)
-      console.log(playerKeyboards[uuid])
   }
 }
 
@@ -59,8 +61,8 @@ const handleKeyboardUpdate = (uuid, data) => {
     || (data.key.code === 'a' || data.key.code === 'ArrowLeft') && 'W'
     || (data.key.code === 'd' || data.key.code === 'ArrowRight') && 'E'
 
-  if(data.key.isDown && playerKeyboards[uuid].push(direction)) return
+  if(data.key.isDown && playerDirections[uuid].push(direction)) return
 
-  const index = playerKeyboards[uuid].findIndex(e => e === direction)
-  index >= 0 && playerKeyboards[uuid].splice(index, 1)
+  const index = playerDirections[uuid].findIndex(e => e === direction)
+  index >= 0 && playerDirections[uuid].splice(index, 1)
 }
