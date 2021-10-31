@@ -1,21 +1,3 @@
-/*
-game = {
-  hacker: {
-    uuid: UUID
-  },
-  player: {
-    uuid: UUID,
-    x: Number,
-    y: Number,
-    speed: Number // blocks / s
-  },
-  grid: {
-    width: Number,
-    height: Number
-  },
-  levels: []<Level>
-}
-*/
 import { v4 as uuidv4 } from 'uuid'
 import { makeLevel } from './levels.js'
 import { send } from './wsUtils.js'
@@ -77,6 +59,11 @@ const getStartingBlock = layout => layout.flat().filter(block => block.type === 
 
 const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
   const level = levels[0].layout.flat().filter(block => block.type !== '.')
+    .map(({ type, x, y }) => ({
+      type, x, y,
+      state: (x === player.x && y === player.y) && 'player'
+        || 'free'
+    }))
 
   send(sendId, { opcode: 'game_state', grid, level })
 }

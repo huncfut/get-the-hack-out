@@ -10,13 +10,16 @@ window.onload = () => {
   btnConnect.onclick = () => connect(IP, PORT)
   const btnPing = document.getElementById('btnPing')
   btnPing.onclick = (data) => ping(data)
+  // Keyboard events
+  document.addEventListener('keyup', e => handleKeyChange(e, false))
+  document.addEventListener('keydown', e => handleKeyChange(e, true))
 }
 
 // Connect to the ws server
 const connect = (ip, port) => {
   if(ws) return
   ws = new WebSocket(`ws://${ip}:${port}`)
-  
+
   ws.onopen = () => {
     // Recieve
     ws.onmessage = message => {
@@ -36,4 +39,4 @@ const connect = (ip, port) => {
   }
 }
 
-const ping = () => ws.send(JSON.stringify({ opcode: "ping", hello: "server" }))
+const send = data => ws.send(JSON.stringify(data))

@@ -1,16 +1,5 @@
-/*
-Level = {
-  layout: [[]]<char>
-  guards: [{
-    x: Number,
-    y: Number,
-    speed: Number // blocks / s
-  }]
-}
-*/
-
 const makeLevel = (grid, depth) => ({
-  layout: generateLevel().map((row, y) => row.map((type, x) => ({ type, x, y, state: 'free' }))),
+  layout: generateLevel().map((row, y) => row.map((type, x) => ({ type, x, y }))),
   enemies: []
 })
 
