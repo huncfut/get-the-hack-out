@@ -16,34 +16,73 @@ game = {
   levels: []<Level>
 }
 */
+import { v4 as uuidv4 } from 'uuid'
 import { makeLevel } from './levels.js'
+import { send } from './wsUtils.js'
 
-const newGame = (uuid) => {
+
+const resetGame = () => ({
+  uuid: null,
+  hacker: {},
+  player: {},
+  grid: {},
+  levels: []
+})
+
+const getNewBoard = () => {
+  // Get grid
   const grid = {
     width: 3 * 4 + 1,
     height: 3 * 4 + 1
   }
 
+  // Get levels
   const levels = [makeLevel(grid)]
 
+  return { grid, levels }
+}
+
+const getNewGame = (playerId, hackerId) => {
+  // genet the grid and levels
+  const { grid, levels } = getNewBoard()
+  // Get player
+  const { x, y } = getStartingBlock(levels[0].layout)
   const player = {
-    uuid: uuid,
-    x: 0,
-    y: 2,
-    level: 0
+    uuid: playerId,
+    x, y
   }
-
-  return { player, grid, levels }
+  // Get hacker
+  const hacker = { uuid: hackerId }
+  // Get game uuid
+  const uuid = uuidv4()
+  // Set tick
+  return { uuid, hacker, player, grid, levels }
 }
 
-const startGame = (player) => {
+const gameTick = ({ uuid, hacker, player, grid, levels }, playerMovement) => ({
+  uuid,
+  hacker,
+  // Move player
+  player: {
+    uuid: player.uuid,
+    x: player.x + playerMovement.x,
+    y: player.y + playerMovement.y
+  },
+  grid,
+  // Move enemies
+  levels
+})
 
-}
+const getStartingBlock = layout => layout.flat().filter(block => block.type === 'e')[0]
 
-const gameTick = (game) => {
+const sendGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
+  const floor = levels[0].layout.flat().filter(block => block.type !== '.')
 
+  send(sendId, { grid, floor })
 }
 
 export {
-  newGame
+  getNewGame,
+  gameTick,
+  sendGameState
 }

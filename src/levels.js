@@ -9,7 +9,12 @@ Level = {
 }
 */
 
-const makeLevel = grid => ({ layout: [
+const makeLevel = (grid, depth) => ({
+  layout: generateLevel().map((row, x) => row.map((type, y) => ({ type, x, y, taken: '' }))),
+  enemies: []
+})
+
+const generateLevel = () => [
   ['n', 'h', 'h', 'h', 'n', 'h', 'h', 'h', 'n', '.', '.', '.', '.'],
   ['v', '.', '.', '.', 'v', '.', '.', '.', 'v', '.', '.', '.', '.'],
   ['e', '.', '.', '.', 'v', '.', '.', '.', 'v', '.', '.', '.', '.'],
@@ -23,7 +28,7 @@ const makeLevel = grid => ({ layout: [
   ['.', '.', '.', '.', '.', '.', 'v', '.', '.', '.', 'v', '.', 'd'],
   ['.', '.', '.', '.', '.', '.', 'v', '.', '.', '.', 'v', '.', 'v'],
   ['.', '.', '.', '.', '.', '.', 'n', 'h', 'h', 'h', 'n', 'h', 'n'],
-]})
+]
 
 export {
   makeLevel

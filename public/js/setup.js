@@ -1,6 +1,7 @@
 var ctx
 
 window.onload = () => {
+  loadImages()
   // Setup canvas
   const gameCanvas = document.getElementById('gameCanvas')
   ctx = gameCanvas.getContext('2d')
@@ -9,7 +10,6 @@ window.onload = () => {
   btnConnect.onclick = () => connect(IP, PORT)
   const btnPing = document.getElementById('btnPing')
   btnPing.onclick = (data) => ping(data)
-  loadImages()
 }
 
 // Connect to the ws server
@@ -30,6 +30,7 @@ const connect = (ip, port) => {
           console.log(data)
           break;
         case "game":
+          console.log(data)
           drawGame(data.game)
         default:
           console.log(data)
