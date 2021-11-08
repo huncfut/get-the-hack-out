@@ -92,20 +92,25 @@ const sendPlayerGameState = (sendId, { uuid, hacker, player, grid, levels }) => 
 }
 
 const getPlayerMovement = (directions, player, grid, layout) => {
+  console.log(driection)
   for(var i = directions.length - 1; i >= 0; i--) {
     switch(directions[i]) {
       case 'S':
         if(player.y + 1 >= grid.height) break
         if(layout[player.y + 1][player.x].type !== '.') return { x: 0, y: 1 }
+        break
       case 'N':
         if(player.y - 1 < 0) break
         if(layout[player.y - 1][player.x].type !== '.') return { x: 0, y: -1 }
+        break
       case 'W':
         if(player.x - 1 < 0) break
         if(layout[player.y][player.x - 1].type !== '.') return { x: -1, y: 0 }
+        break
       case 'E':
         if(player.x + 1 >= grid.width) break
         if(layout[player.y][player.x + 1].type !== '.') return { x: 1, y: 0 }
+        break
     }
   }
   return { x: 0, y: 0 }
