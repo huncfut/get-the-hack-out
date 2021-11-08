@@ -27,6 +27,13 @@ const connect = (ip, port) => {
       switch(data.opcode) {
         case 'player_type':
           playerType = data.type
+
+          // Add vinette
+          if(playerType === 'player') {
+            const vinette = document.createElement('div')
+            vinette.classList.add('vinette')
+            document.getElementById('boardContainer').appendChild(vinette)
+          }
         case 'game_state':
           drawGame(data)
           // if(playerType === 'player') playersVinette(data.grid)
