@@ -92,7 +92,6 @@ const sendPlayerGameState = (sendId, { uuid, hacker, player, grid, levels }) => 
 }
 
 const getPlayerMovement = (directions, player, grid, layout) => {
-  console.log(driection)
   for(var i = directions.length - 1; i >= 0; i--) {
     switch(directions[i]) {
       case 'S':

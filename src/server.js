@@ -75,13 +75,20 @@ const handleMessage = (uuid, data) => {
 
 const handlePlayerKeyboardUpdate = (uuid, data) => {
   if(data.key.code === 'q') return
+
+  // Get the direction
   const direction = (data.key.code === 'w' || data.key.code === 'ArrowUp') && 'N'
     || (data.key.code === 's' || data.key.code === 'ArrowDown') && 'S'
     || (data.key.code === 'a' || data.key.code === 'ArrowLeft') && 'W'
     || (data.key.code === 'd' || data.key.code === 'ArrowRight') && 'E'
 
-  if(data.key.isDown && playerDirections[uuid].push(direction)) return
+  // Add direction if the key was pressed
+  if(data.key.isDown) {
+    playerDirections[uuid].push(direction)
+    return
+  }
 
+  // Remove direction if the key was released
   const index = playerDirections[uuid].findIndex(e => e === direction)
   index >= 0 && playerDirections[uuid].splice(index, 1)
 }
