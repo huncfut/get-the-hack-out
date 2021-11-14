@@ -3,7 +3,6 @@ const generateLevels = () => {
   return layouts.map(layout => makeLevel(layout))
 }
 
-
 const makeLevel = layout => {
   return {
     layout: layout.map((row, y) => row.map((type, x) => ({ type, x, y }))),

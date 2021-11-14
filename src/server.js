@@ -4,6 +4,7 @@ import { WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid'
 import { getNewGame, sendPlayerGameState, sendHackerGameState, gameTick } from './game.js'
 import { newConnection, send } from './wsUtils.js'
+import { shuffleArray } from './utils.js'
 
 // Get .env in as process.env
 dotenv.config()
