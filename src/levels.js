@@ -1,12 +1,15 @@
+import { generateNewEnemies } from './enemy.js'
+
 const generateLevels = () => {
   const layouts = generateLayouts()
   return layouts.map(layout => makeLevel(layout))
 }
 
 const makeLevel = layout => {
+  const level = layout.map((row, y) => row.map((type, x) => ({ type, x, y })))
   return {
-    layout: layout.map((row, y) => row.map((type, x) => ({ type, x, y }))),
-    enemies: []
+    layout: level,
+    enemies: generateNewEnemies(level, 2)
   }
 }
 
