@@ -1,15 +1,18 @@
 var imgs = {
   n: {
     player: new Image(),
-    free: new Image()
+    free: new Image(),
+    enemy: new Image()
   },
   v: {
     player: new Image(),
-    free: new Image()
+    free: new Image(),
+    enemy: new Image()
   },
   h: {
     player: new Image(),
-    free: new Image()
+    free: new Image(),
+    enemy: new Image()
   },
   e: {
     player: new Image(),

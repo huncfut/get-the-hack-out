@@ -20,6 +20,7 @@ const getNewBoard = () => {
   // Get levels
   const levels = generateLevels()
 
+
   return { grid, levels }
 }
 
@@ -69,10 +70,13 @@ const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
 const getStartingBlock = layout => layout.flat().filter(block => block.type === 'e')[0]
 
 const sendHackerGameState = (sendId, { uuid, hacker, player, grid, levels }, status = '') => {
+  const enemyPos = levels[player.level].enemies.map(enemy => [enemy.x, enemy.y])
+
   const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
     .map(({ type, x, y }) => ({
       type, x, y,
       occupied: (x === player.x && y === player.y) && 'player'
+        || enemyPos.find(pos => pos[0] === x && pos[1] === y) && 'enemy'
         || 'free'
     }))
 
@@ -80,15 +84,22 @@ const sendHackerGameState = (sendId, { uuid, hacker, player, grid, levels }, sta
 }
 
 const sendPlayerGameState = (sendId, { uuid, hacker, player, grid, levels }) => {
+  const enemyPos = levels[player.level].enemies.map(enemy => [enemy.x, enemy.y])
   const level = levels[player.level].layout.flat().filter(block => block.type !== '.')
     .map(({ type, x, y }) => ({
       type, x: x - player.x + 3, y: y - player.y + 3,
       occupied: (x === player.x && y === player.y) && 'player'
+        || enemyPos.find(pos => pos[0] === x && pos[1] === y) && 'enemy'
         || 'free'
     })).filter(({ x, y }) => (
       (x <= 6 && x >= 0) && (y <= 6 && y >= 0)
    ))
    send(sendId, { opcode: 'game_state', grid: { width: 7, height: 7 }, level })
+}
+
+const prepareLevels = (levels) => {
+
+  levels.map()
 }
 
 const getPlayerMovement = (directions, player, grid, layout) => {
