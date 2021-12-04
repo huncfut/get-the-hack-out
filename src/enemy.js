@@ -26,8 +26,8 @@ const generateNewEnemies = (layout, count) => {
 // ----- Dummy Movement AI
 
 const handleEnemyMovement = (enemy, layout) => {
-  if(enemy.direction === '') {
-    return moveEnemy(getNextEnemyMove(enemy, layout), layout)
+  if(enemy.direction == '') {
+    return getNextEnemyMove(enemy, layout)
   }
   return moveEnemy(enemy, layout)
 }
@@ -35,49 +35,40 @@ const handleEnemyMovement = (enemy, layout) => {
 const getNextEnemyMove = (enemy, layout) => {
   const rand = Math.random()
 
+  const { uuid, x, y } = enemy
+
   // 80% chance to stay
   if(rand < 0.8) {
-    return ''
+    return {
+      uuid,
+      direction: '',
+      x, y
+    }
   }
 
   const dirRand = (rand - 0.8) * 5 // random number <0, 1)
 
-  console.log(layout)
-
   const directions = getDirections(enemy, layout)
-  console.log(directions)
-  // const dirN = directions.reduce((acc, i))
 
+
+  return { uuid, direction: directions[Math.floor(dirRand * directions.length)], x, y }
 }
 
 const moveEnemy = (enemy, layout) => {
   const { uuid, direction, x, y } = enemy
 
-  if(direction === 'N') {
-    const newX = x
-    const newY = y - 1
-  } else if(direction === 'S') {
-    const newX = x
-    const newY = y + 1
-  } else if(direction === 'W') {
-    const newX = x - 1
-    const newY = y
-  } else if(direction === 'E') {
-    const newX = x + 1
-    const newY = y
-  }
-
+  const newX = (direction === 'W') ? x - 1 : (direction === 'E') ? x + 1 : x
+  const newY = (direction === 'N') ? y - 1 : (direction === 'S') ? y + 1 : y
 
   return {
     uuid,
-    direction: (layout[newY][newX].type === 'n') ? '' : direction,
+    direction: (layout[newY][newX].type !== 'v' && layout[newY][newX].type !== 'h') ? '' : direction,
     x: newX,
     y: newY
   }
 }
 
 const getDirections = ({ x, y }, layout) => {
-  console.log(x, y)
   var n = []
   if(y-1 >= 0) (layout[y-1][x].type === 'v') && n.push('N')
   if(y+1 < layout.length) (layout[y+1][x].type === 'v') && n.push('S')
@@ -88,5 +79,6 @@ const getDirections = ({ x, y }, layout) => {
 
 export {
   generateNewEnemies,
-  getNextEnemyMove
+  getNextEnemyMove,
+  handleEnemyMovement
 }
