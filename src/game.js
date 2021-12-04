@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { generateLevels } from './levels.js'
 import { send } from './wsUtils.js'
+import { getNextEnemyMove } from './enemy.js'
 
 
 const resetGame = () => ({
@@ -45,11 +46,24 @@ const getNewGame = (playerId, hackerId) => {
 const gameTick = (directions, { uuid, hacker, player, grid, levels }) => {
   const playerMovement = getPlayerMovement(directions, player, grid, levels[player.level].layout)
 
+  // Change player's level
   var levelChange = 0
   if(playerMovement.x === 0 && playerMovement.y === 0) {
     if(levels[player.level].layout[player.y][player.x].type === 'u') levelChange = -1
     else if(levels[player.level].layout[player.y][player.x].type === 'd') levelChange = 1
   }
+
+  // Move enemies
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
+  getNextEnemyMove(levels[player.level].enemies[0], levels[player.level].layout)
 
   return {
     uuid,
