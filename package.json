@@ -1,6 +1,6 @@
 {
   "name": "get-the-hack-out",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Work together to hack your way out",
   "main": "src/server.js",
   "scripts": {
